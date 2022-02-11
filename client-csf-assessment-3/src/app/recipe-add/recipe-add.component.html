@@ -4,7 +4,7 @@
             <label for="title">Title</label>
         </div>
         <div>
-            <input type="text" id="title">
+            <input type="text" id="title" formControlName="title">
         </div>
     </section>
     <section>
@@ -12,26 +12,33 @@
             <label for="image">Image</label>
         </div>
         <div>
-            <input type="text" id="image">
+            <input type="text" id="image" formControlName="image">
         </div>
     </section>
     <section>
         <div>
-            <label for="ingredients">Ingredients</label>
-            <button type="button">Add Ingredient</button>
+            <input type="text" id="ingredients" placeholder="Add an ingredient" formArrayName="ingredients">
+            <button type="button" (click)="addIngredient()"> + </button>
         </div>
-        <div></div>
+        <div>
+            <label for="ingredients">Ingredients</label>
+        </div>
+        <div>
+            <ol>
+                <li><button type="button"> X </button></li>
+            </ol>
+        </div>
     </section>
     <section>
         <div>
             <label for="instruction">Instructions</label>
         </div>
         <div>
-            <textarea name="instruction" id="instruction" cols="50" rows="20"></textarea>
+            <textarea id="instruction" cols="50" rows="20" formControlName="instruction"></textarea>
         </div>
     </section>
     <section>
-        <button type="button" [routerLink]="['/']">Back</button>
-        <button type="button">Add to Library</button>
+        <button type="button" (click)="back()">Back</button>
+        <button type="button" (click)="addRecipe()">Add to Library</button>
     </section>
 </form>
