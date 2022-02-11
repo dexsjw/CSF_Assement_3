@@ -3,9 +3,9 @@
         <h2>Recipe List</h2>
     </section>
     <section>
-        <div class="recipe-style" *ngFor="let recipe of recipes">{{recipe}}</div>
+        <div class="recipe-style" *ngFor="let recipe of recipes" [routerLink]="['/recipe', recipe.id]">{{recipe.title}}</div>
     </section>
     <section>
-        <button type="button">Add</button>
+        <button type="button" [routerLink]="['/add']">Add</button>
     </section>
 </div>

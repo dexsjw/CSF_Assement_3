@@ -10,13 +10,13 @@ import { RecipeService } from '../service/recipe.service';
 })
 export class RecipeListComponent implements OnInit {
 
-  recipes: RecipeSummary[] = [];
+  recipes: RecipeSummary[] =[];
 
   constructor(private rSvc: RecipeService) { }
 
   ngOnInit(): void {
     this.rSvc.getAllRecipes()
-      .then(recipes => this.recipes = recipes as RecipeSummary[]);
+      .then(recipes => this.recipes = recipes)
   }
 
 }
