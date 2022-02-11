@@ -18,14 +18,14 @@ import jakarta.json.JsonArrayBuilder;
 /* Write your request hander in this file */
 
 @RestController
-@RequestMapping(path="/api")
+@RequestMapping(path="/api/recipes")
 public class RecipesRestController {
     
     @Autowired
     private RecipeService rSvc;
 
     @CrossOrigin
-    @GetMapping(path="/recipes", produces="application/json")
+    @GetMapping(produces="application/json")
     public ResponseEntity<String> getRecipes(){
         List<Recipe> recipes = this.rSvc.getAllRecipes();
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();

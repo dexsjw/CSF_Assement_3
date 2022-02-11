@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { RecipeSummary } from '../recipe-model';
+import { Recipe, RecipeSummary } from '../recipe-model';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
@@ -13,6 +13,12 @@ export class RecipeService {
     return lastValueFrom(
       this.http.get<RecipeSummary[]>("/api/recipes")
     );
+  }
+
+  getRecipe(recipeId: string): Promise<Recipe> {
+    return lastValueFrom(
+      this.http.get<Recipe>(`/api/recipe/${recipeId}`)
+    )
   }
 
 }

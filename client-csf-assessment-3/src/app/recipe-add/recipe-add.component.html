@@ -1,1 +1,37 @@
-<p>recipe-add works!</p>
+<form [formGroup]="recipeForm">
+    <section>
+        <div>
+            <label for="title">Title</label>
+        </div>
+        <div>
+            <input type="text" id="title">
+        </div>
+    </section>
+    <section>
+        <div>
+            <label for="image">Image</label>
+        </div>
+        <div>
+            <input type="text" id="image">
+        </div>
+    </section>
+    <section>
+        <div>
+            <label for="ingredients">Ingredients</label>
+            <button type="button">Add Ingredient</button>
+        </div>
+        <div></div>
+    </section>
+    <section>
+        <div>
+            <label for="instruction">Instructions</label>
+        </div>
+        <div>
+            <textarea name="instruction" id="instruction" cols="50" rows="20"></textarea>
+        </div>
+    </section>
+    <section>
+        <button type="button" [routerLink]="['/']">Back</button>
+        <button type="button">Add to Library</button>
+    </section>
+</form>
