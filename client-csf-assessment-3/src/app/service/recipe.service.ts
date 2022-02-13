@@ -21,4 +21,10 @@ export class RecipeService {
     )
   }
 
+  addRecipe(recipe: Recipe) {
+    return lastValueFrom(
+      this.http.post("/api/recipe", recipe)
+    );
+  }
+
 }

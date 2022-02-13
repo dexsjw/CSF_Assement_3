@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import { Router } from '@angular/router';
 
 import { Recipe } from '../recipe-model';
+import { RecipeService } from '../service/recipe.service';
 
 @Component({
   selector: 'app-recipe-add',
@@ -12,11 +13,12 @@ import { Recipe } from '../recipe-model';
 export class RecipeAddComponent implements OnInit {
 
   recipeForm!: FormGroup;
-  ingForm!: FormGroup;
-  recipe!: Recipe
-  ingredients!: string[]
+  ingArr = this.fb.array([
+    this.fb.control('', [Validators.minLength(3)])
+  ], Validators.required);
+  recipe!: Recipe;
 
-  constructor(private fb: FormBuilder, private router: Router) { }
+  constructor(private fb: FormBuilder, private router: Router, private rSvc: RecipeService) { }
 
   ngOnInit(): void {
     this.createRecipeForm();
@@ -26,13 +28,19 @@ export class RecipeAddComponent implements OnInit {
     this.recipeForm = this.fb.group({
       title: this.fb.control('', [Validators.required, Validators.minLength(3)]),
       image: this.fb.control('', [Validators.required]),
-      ingredients: this.fb.array([new FormControl('', [Validators.required])]),
+      ingredients: this.ingArr,
       instruction: this.fb.control('', [Validators.required, Validators.minLength(3)])
     })
   }
 
   addIngredient() {
-    (<FormArray>this.recipeForm.get("ingredients")).push(this.fb.control(''));
+    this.ingArr.push(
+      this.fb.control('', [Validators.minLength(3)])
+    );
+  }
+
+  removeIngredient(index: number) {
+    this.ingArr.removeAt(index);
   }
 
   back() {
@@ -40,7 +48,10 @@ export class RecipeAddComponent implements OnInit {
   }
 
   addRecipe() {
-    console.info(this.recipeForm.value)
+    const newRecipe: Recipe = this.recipeForm.value as Recipe;
+    newRecipe.id = "";
+    this.rSvc.addRecipe(newRecipe)
+      .then()
     this.back();
   }
 

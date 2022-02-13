@@ -15,18 +15,14 @@
             <input type="text" id="image" formControlName="image">
         </div>
     </section>
-    <section>
-        <div>
-            <input type="text" id="ingredients" placeholder="Add an ingredient" formArrayName="ingredients">
-            <button type="button" (click)="addIngredient()"> + </button>
-        </div>
+    <section formArrayName="ingredients">
         <div>
             <label for="ingredients">Ingredients</label>
+            <button type="button" (click)="addIngredient()"> + </button>
         </div>
-        <div>
-            <ol>
-                <li><button type="button"> X </button></li>
-            </ol>
+        <div *ngFor="let ingredient of ingArr.controls; let i = index">
+            <input type="text" id="ingredients" placeholder="Add an ingredient">
+            <button type="button" (click)="removeIngredient(i)"> - </button>
         </div>
     </section>
     <section>
@@ -39,6 +35,6 @@
     </section>
     <section>
         <button type="button" (click)="back()">Back</button>
-        <button type="button" (click)="addRecipe()">Add to Library</button>
+        <button type="button" (click)="addRecipe()" [disabled]="recipeForm.invalid">Add to Library</button>
     </section>
 </form>
