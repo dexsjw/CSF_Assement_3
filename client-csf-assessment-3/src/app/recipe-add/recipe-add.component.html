@@ -1,4 +1,4 @@
-<form [formGroup]="recipeForm">
+<form [formGroup]="recipeForm" (ngSubmit)="addRecipe()">
     <section>
         <div>
             <label for="title">Title</label>
@@ -15,6 +15,8 @@
             <input type="text" id="image" formControlName="image">
         </div>
     </section>
+<!-- For Dynamic display of ingredients -->
+<!--     
     <section formArrayName="ingredients">
         <div>
             <label for="ingredients">Ingredients</label>
@@ -23,6 +25,28 @@
         <div *ngFor="let ingredient of ingArr.controls; let i = index">
             <input type="text" id="ingredients" placeholder="Add an ingredient">
             <button type="button" (click)="removeIngredient(i)"> - </button>
+        </div>
+    </section>
+ -->
+<!-- For Static display of ingredients -->
+    <section formArrayName="ingredients">
+        <div>
+            <input type="text" id="ingredients" placeholder="Add an ingredient" formControlName="ingredient">
+            <button type="button" (click)="addIngredient()" [disabled]="ingGrp.invalid"> + </button>
+        </div>
+        <div>
+            <label for="ingredients">Ingredients</label>
+        </div>
+        <div *ngIf="ingList.length > 0">
+            <ol>
+                <li *ngFor="let ing of ingList; let i = index">
+                    {{ ing }}
+                    <button type="button" (click)="removeIngredient(i)"> - </button>
+                </li>
+            </ol>
+        </div>
+        <div *ngIf="ingList.length <= 0">
+            <div>Please add at least one ingredient</div>
         </div>
     </section>
     <section>
@@ -35,6 +59,6 @@
     </section>
     <section>
         <button type="button" (click)="back()">Back</button>
-        <button type="button" (click)="addRecipe()" [disabled]="recipeForm.invalid">Add to Library</button>
+        <button type="submit" [disabled]="recipeForm.invalid || !(ingList.length > 0)">Add to Library</button>
     </section>
 </form>

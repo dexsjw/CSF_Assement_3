@@ -1,6 +1,11 @@
 package ibf2021.assessment.csf.server.controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ProcessHandle.Info;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,21 +18,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ibf2021.assessment.csf.server.ServerApplication;
 import ibf2021.assessment.csf.server.models.Recipe;
 import ibf2021.assessment.csf.server.services.RecipeService;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
 
 /* Write your request hander in this file */
 
 @RestController
 @RequestMapping(path="/api/recipe")
 public class RecipeRestController {
+
+    private final Logger logger = Logger.getLogger(ServerApplication.class.getName());
     
     @Autowired
     private RecipeService rSvc;
 
-    @CrossOrigin
     @GetMapping(path="/{recipeId}", produces="application/json")
     public ResponseEntity<String> getRecipeById(@PathVariable String recipeId) {
         Optional<Recipe> optRecipe = this.rSvc.getRecipeById(recipeId);
@@ -50,10 +60,26 @@ public class RecipeRestController {
     }
 
     @PostMapping(consumes="application/json", produces="application/json")
-    public ResponseEntity<String> addRecipe(@RequestBody Recipe recipe) {
+    public ResponseEntity<String> addRecipe(@RequestBody String payload) {
         Recipe newRecipe = new Recipe();
-        newRecipe = recipe;
-        System.out.println(newRecipe);
+        JsonObject recipe;
+        try (InputStream is = new ByteArrayInputStream(payload.getBytes())) {
+            JsonReader reader = Json.createReader(is);
+            recipe = reader.readObject();
+            newRecipe.setTitle(recipe.getString("title"));
+            newRecipe.setImage(recipe.getString("image"));
+            newRecipe.setInstruction(recipe.getString("instruction"));
+            JsonArray ingArr = recipe.getJsonArray("ingredients");
+            for (JsonValue ingredient: ingArr) {
+                newRecipe.addIngredient(ingredient.toString());
+            }
+        } catch (IOException ioe) {
+            recipe = Json.createObjectBuilder()
+            .add("error", ioe.getMessage())
+            .build();
+        }
+        this.rSvc.addRecipe(newRecipe);
+        
         JsonObject respMsg = Json.createObjectBuilder()
             .add("msg", newRecipe.toString())
             .build();

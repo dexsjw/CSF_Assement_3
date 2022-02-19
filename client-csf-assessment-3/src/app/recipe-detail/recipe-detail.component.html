@@ -7,11 +7,13 @@
     </section>
     <section>
         <h3>Ingredients</h3>
-        <h4 *ngFor="let ingredient of recipe?.ingredients">{{ingredient}}</h4>
+        <ol>
+            <li *ngFor="let ingredient of recipe?.ingredients">{{ingredient}}</li>
+        </ol>
     </section>
     <section>
         <h3>Instruction</h3>
-        <h4>{{recipe?.instruction}}</h4>
+        <div>{{recipe?.instruction}}</div>
     </section>
     <section>
         <button type="button" [routerLink]="['back']">Back</button>

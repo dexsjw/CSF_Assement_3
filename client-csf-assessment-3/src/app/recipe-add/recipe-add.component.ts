@@ -13,10 +13,14 @@ import { RecipeService } from '../service/recipe.service';
 export class RecipeAddComponent implements OnInit {
 
   recipeForm!: FormGroup;
-  ingArr = this.fb.array([
-    this.fb.control('', [Validators.minLength(3)])
-  ], Validators.required);
   recipe!: Recipe;
+
+  // For Dynamic display of ingredients
+  ingArr!: FormArray;
+
+  // For Static display of ingredients
+  ingList: string[] = [];
+  ingGrp!: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router, private rSvc: RecipeService) { }
 
@@ -28,19 +32,43 @@ export class RecipeAddComponent implements OnInit {
     this.recipeForm = this.fb.group({
       title: this.fb.control('', [Validators.required, Validators.minLength(3)]),
       image: this.fb.control('', [Validators.required]),
-      ingredients: this.ingArr,
+
+      // For Dynamic display of ingredients
+      /*       
+      ingredients: this.ingArr = this.fb.array([
+        this.fb.control('', Validators.minLength(3))
+      ]),
+      */
+
+      // For Static display of ingredients
+      ingredients: this.ingGrp = this.fb.group({
+        ingredient: this.fb.control('', [Validators.minLength(3)])
+      }),
+
       instruction: this.fb.control('', [Validators.required, Validators.minLength(3)])
     })
   }
 
   addIngredient() {
+    // For Dynamic display of ingredients
+    /* 
     this.ingArr.push(
       this.fb.control('', [Validators.minLength(3)])
     );
+    */    
+
+    // For Static display of ingredients
+    const ing = this.ingGrp.get('ingredient') as FormControl;
+    this.ingList.push(ing.value);
+    this.ingGrp.reset();
   }
 
   removeIngredient(index: number) {
-    this.ingArr.removeAt(index);
+    // For Dynamic display of ingredients
+    // this.ingArr.removeAt(index);
+
+    //For Static display of ingredients
+    this.ingList.splice(index, 1);
   }
 
   back() {
@@ -48,10 +76,13 @@ export class RecipeAddComponent implements OnInit {
   }
 
   addRecipe() {
-    const newRecipe: Recipe = this.recipeForm.value as Recipe;
+    const newRecipe = this.recipeForm.value as Recipe;
+    newRecipe.ingredients = this.ingList;
     newRecipe.id = "";
     this.rSvc.addRecipe(newRecipe)
-      .then()
+      .then(v => console.info(v));
+    this.recipeForm.reset();
+    this.ingList = [];
     this.back();
   }
 

@@ -21,9 +21,9 @@ export class RecipeService {
     )
   }
 
-  addRecipe(recipe: Recipe) {
+  addRecipe(recipe: Recipe): Promise<string> {
     return lastValueFrom(
-      this.http.post("/api/recipe", recipe)
+      this.http.post<string>("/api/recipe", recipe)
     );
   }
 
